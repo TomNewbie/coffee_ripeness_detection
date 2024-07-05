@@ -56,4 +56,4 @@ def count_elements_in_class(path, element_arr = COFFEE_CLASS_IVYQO):
 # count_elements_in_class("crop/test", COFFEE_CLASS_SKEW_DATASET)
 # count_elements_in_class("ivyqo/augmented/crop/train")
 # count_elements_in_class("ivyqo/augmented/crop/valid")
-count_elements_in_class("dataset/ivyqo/augmented_mix/crop/train")
+# count_elements_in_class("dataset/ivyqo/augmented_mix/crop/train")

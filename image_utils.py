@@ -1,7 +1,6 @@
 from PIL import Image, ImageDraw
 import numpy as np
-import os 
-from sklearn.cluster import KMeans
+import os
 
 # Function to create a mask from polygon
 def create_mask_from_polygon(image_size, polygon, i):
@@ -22,7 +21,7 @@ def get_bounding_box(image_np):
 #     # label_path = 'test/labels/1_20211204_111234_jpg.rf.dd862269207c26e54f6183784de2483a.txt'
 #     image = Image.open(image_path)
 #     image_id = image_path.split('.')[2]
-    
+
 #     # Get dimension image
 #     x, y = image.size
 #     with open(label_path, 'r') as file:
@@ -47,7 +46,6 @@ def get_bounding_box(image_np):
 def crop_and_save_image(image_path, label_path, dest):
     image = Image.open(image_path)
     image_id = image_path.split('.')[2]
-    
     # Get dimension image
     x, y = image.size
     with open(label_path, 'r') as file:
@@ -71,7 +69,7 @@ def crop_and_save_image(image_path, label_path, dest):
             os.makedirs(dest)
         crop_image.save(cropped_image_path)
         print(f'Cropped image saved to {cropped_image_path}')
-  
+
 def get_polygon_coords(line, x=64, y=64):
     parts = line.strip().split()
     class_id = parts[0]
@@ -91,36 +89,22 @@ def create_crop_image_matrix(image, mask_np):
     return masked_image.crop(crop_boundingbox)
 
 
-def extract_non_background_mean_color(img_np):    
+def extract_non_background_mean_color(img_np):
     # Flatten the image to a 2D array where each row is a pixel's BGR values
     img_flat = img_np.reshape(-1, 3)
-    
-    # Create a mask to filter out the background pixels (assuming background is black with all zero values)
-    non_background_mask = np.any(img_flat != [0, 0, 0], axis=1)
-    
+
+    # Create a mask to filter out the background pixels (assuming background is white with all zero values)
+    non_background_mask = np.any(img_flat != [255, 255, 255], axis=1)
+
     # Filter the non-background pixels
     non_background_pixels = img_flat[non_background_mask]
-    
+
     # Calculate the mean color of the non-background pixels
     if len(non_background_pixels) == 0:
         # If there are no non-background pixels, return a default value (e.g., black)
-        return np.array([0, 0, 0])
+        return np.array([255, 255, 255])
     else:
         return non_background_pixels.mean(axis=0)
 
 
-def cluster_image(num_clusters, features, image_paths):
-    kmeans = KMeans(n_clusters=num_clusters, random_state=42)
-    labels = kmeans.fit_predict(features)
-
-    clusters = {i: [] for i in range(num_clusters)}
-
-    for img_path, label in zip(image_paths, labels):
-        clusters[label].append(img_path)
-    for cluster, paths in clusters.items():
-    cluster_path = f'cluster_{cluster}'
-    os.makedirs(cluster_path, exist_ok=True)
-    for path in paths:
-        img_name = os.path.basename(path)
-        new_path = os.path.join(cluster_path, img_name)
 
