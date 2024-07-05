@@ -1,5 +1,5 @@
 from file_utils import list_all_image_file, get_label_path, get_image_path, count_elements_in_class
-from crop_image import crop_images
+from image_utils import crop_images
 
 
 def generate_crop_image(src_image, src_label, dest):
