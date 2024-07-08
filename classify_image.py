@@ -54,7 +54,7 @@ def get_feature_image_from_folder(src_image, c_path):
     cluster_image(3, feature_list, images, src_image, c_path)
 
 
-get_feature_image_from_folder('dataset/trash/test/cluster_0', 'dataset/trash/test/cluster_000')
+# get_feature_image_from_folder('dataset/trash/test/cluster_0', 'dataset/trash/test/cluster_000')
 
 def seperate_img_by_class(src_image, dest):
     for class_id in range(4):
@@ -75,5 +75,67 @@ def seperate_img_by_class(src_image, dest):
         new_path = os.path.join(switcher.get(int(class_id)), img_name)
         shutil.copy2(image_path, new_path)
 
+import cv2
+import numpy as np
+# seperate_img_by_class('dataset/ivyqo/augmented_mix/crop/test', 'dataset/trash/test/cluster/test')
+#-10, 160, 100 -> 10, 255,175
+def classify_color(image_path):
+    # Read the image
+    image = cv2.imread(image_path)
+    if image is None:
+        print("Error: Image not found.")
+        return
 
-# seperate_img_by_class('dataset/trash/crop/test', 'dataset/trash/test/cluster')
+    # Convert the image to HSV color space
+    hsv = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
+
+    # Define range for red color in HSV
+    lower_red1 = np.array([0, 160, 50])
+    upper_red1 = np.array([10, 255, 255])
+    lower_red2 = np.array([170, 160, 50])
+    upper_red2 = np.array([180, 255, 255])
+
+    # Define range for black color in HSV
+    lower_black = np.array([0, 0, 0])
+    upper_black = np.array([50, 255, 49])
+
+    # Create masks for red and black colors
+    mask_red1 = cv2.inRange(hsv, lower_red1, upper_red1)
+    mask_red2 = cv2.inRange(hsv, lower_red2, upper_red2)
+    mask_red = cv2.bitwise_or(mask_red1, mask_red2)
+    mask_black = cv2.inRange(hsv, lower_black, upper_black)
+
+    # Count the number of pixels for each color
+    red_pixels = cv2.countNonZero(mask_red)
+    black_pixels = cv2.countNonZero(mask_black)
+    return red_pixels, black_pixels
+    
+    #     color = "Red"
+    # else:
+    #     color = "Black"
+
+    # # Print the result
+    # print(f"The object is classified as: {color}")
+
+    # # Optionally, display the masks for visual verification
+    # cv2.imshow('Original Image', image)
+    # cv2.imshow('Red Mask', mask_red)
+    # cv2.imshow('Black Mask', mask_black)
+    # cv2.waitKey(0)
+    # cv2.destroyAllWindows()
+
+def seperate_img_by_BLACK(src_image, dest):
+    os.makedirs(f"{dest}/black", exist_ok=True)
+    os.makedirs(f"{dest}/red", exist_ok=True)
+
+    list_image_file_name = list_all_image_file(src_image)
+    for image_name in list_image_file_name:
+        image_path= get_image_path(src_image, image_name)
+        red_pixels, black_pixels = classify_color(image_path)
+        # Determine the color with the most pixels
+        if red_pixels <= black_pixels:
+            shutil.copy2(image_path, os.path.join(f"{dest}/black", image_name))
+        else:
+            shutil.copy2(image_path, os.path.join(f"{dest}/red", image_name))
+
+seperate_img_by_BLACK('dataset/trash/test/cluster_0', 'dataset/trash/test/cluster')

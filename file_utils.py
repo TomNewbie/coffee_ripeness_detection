@@ -6,6 +6,7 @@ directory_path = 'train/images'
 COFFEE_CLASS_IVYQO = ["overripe", "ripe", "semi_ripe", "unripe"]
 COFFEE_CLASS_SKEW_DATASET = ['dry', 'overripe', 'ripe', 'semi_ripe', 'unripe']
 # List all files and directories in the specified path
+import shutil
 
 # Print only the files
 def list_all_image_file(image_path):
@@ -23,8 +24,8 @@ def get_label_path(label_path, image_file):
     image_name, _ = os.path.splitext(image_file)
     return f'{label_path}/{image_name}.txt'
 
-def get_image_path(image_path, image_file):
-    return os.path.join(image_path, image_file)
+def get_image_path(image_path, image_file_name):
+    return os.path.join(image_path, image_file_name)
 
 
 def count_elements_in_class(path, element_arr = COFFEE_CLASS_IVYQO):
@@ -57,3 +58,17 @@ def count_elements_in_class(path, element_arr = COFFEE_CLASS_IVYQO):
 # count_elements_in_class("ivyqo/augmented/crop/train")
 # count_elements_in_class("ivyqo/augmented/crop/valid")
 # count_elements_in_class("dataset/ivyqo/augmented_mix/crop/train")
+
+def copy_file(src, dest_img, dest_label):
+    os.makedirs(dest_img, exist_ok=True)
+    os.makedirs(dest_label, exist_ok=True)
+
+    images = list_all_image_file(src)
+    count = 0 
+    for image in images:
+        new_file_name = f"background_{count}.jpg"
+        shutil.copy2(get_image_path(src, image), get_image_path(dest_img, new_file_name))
+        with open(get_label_path(dest_label, new_file_name), 'w') as file:
+            pass
+        count+=1
+# copy_file("dataset/background", "dataset/ivyqo_augment_dataset/train/images", "dataset/ivyqo_augment_dataset/train/labels")
