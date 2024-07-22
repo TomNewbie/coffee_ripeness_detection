@@ -72,3 +72,6 @@ def copy_file(src, dest_img, dest_label):
             pass
         count+=1
 # copy_file("dataset/background", "dataset/ivyqo_augment_dataset/train/images", "dataset/ivyqo_augment_dataset/train/labels")
+
+def get_file_name_by_path(path):
+    return path.split('/')[-1]

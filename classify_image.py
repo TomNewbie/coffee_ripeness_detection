@@ -51,10 +51,10 @@ def get_feature_image_from_folder(src_image, c_path):
     for image in images:
         image_np = np.array(Image.open(get_image_path(src_image, image)))
         feature_list.append(extract_non_background_mean_color(image_np))
-    cluster_image(3, feature_list, images, src_image, c_path)
+    cluster_image(5, feature_list, images, src_image, c_path)
 
 
-# get_feature_image_from_folder('dataset/trash/test/cluster_0', 'dataset/trash/test/cluster_000')
+get_feature_image_from_folder('dataset/trash/testdataset/ripe', 'dataset/trash/testdataset/split/ripe')
 
 def seperate_img_by_class(src_image, dest):
     for class_id in range(4):
@@ -77,7 +77,7 @@ def seperate_img_by_class(src_image, dest):
 
 import cv2
 import numpy as np
-# seperate_img_by_class('dataset/ivyqo/augmented_mix/crop/test', 'dataset/trash/test/cluster/test')
+# seperate_img_by_class('dataset/ivyqo/augmented_mix/crop/test', 'dataset/trash/test/another_test')
 #-10, 160, 100 -> 10, 255,175
 def classify_color(image_path):
     # Read the image
@@ -97,7 +97,7 @@ def classify_color(image_path):
 
     # Define range for black color in HSV
     lower_black = np.array([0, 0, 0])
-    upper_black = np.array([50, 255, 49])
+    upper_black = np.array([25, 255, 49])
 
     # Create masks for red and black colors
     mask_red1 = cv2.inRange(hsv, lower_red1, upper_red1)
@@ -138,4 +138,4 @@ def seperate_img_by_BLACK(src_image, dest):
         else:
             shutil.copy2(image_path, os.path.join(f"{dest}/red", image_name))
 
-seperate_img_by_BLACK('dataset/trash/test/cluster_0', 'dataset/trash/test/cluster')
+# seperate_img_by_BLACK('dataset/trash/another_test_0', 'dataset/trash/test/red_split')
