@@ -59,7 +59,7 @@ def count_elements_in_class(path, element_arr = COFFEE_CLASS_IVYQO):
 # count_elements_in_class("ivyqo/augmented/crop/valid")
 # count_elements_in_class("dataset/ivyqo/augmented_mix/crop/train")
 
-def copy_file(src, dest_img, dest_label):
+def generate_background_dataset(src, dest_img, dest_label):
     os.makedirs(dest_img, exist_ok=True)
     os.makedirs(dest_label, exist_ok=True)
 
@@ -71,7 +71,7 @@ def copy_file(src, dest_img, dest_label):
         with open(get_label_path(dest_label, new_file_name), 'w') as file:
             pass
         count+=1
-copy_file("dataset/a/background", "dataset/a/train/images", "dataset/a/train/labels")
+# generate_background_dataset("dataset/a/background", "dataset/a/train/images", "dataset/a/train/labels")
 
 def get_file_name_by_path(path):
     return path.split('/')[-1]
